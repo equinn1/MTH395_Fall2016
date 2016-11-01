@@ -1,0 +1,50 @@
+\documentclass{article}
+
+\begin{document}
+\section*{Generating random variables with the inverse CDF transform method}
+In this exercise, we will use the inverse CDF method to generate a sample from an exponential distribution.
+\par\vspace{0.3 cm}\noindent
+This method is not required for the exponential, because the \texttt{rexp()} function generates samples, but it is useful for a distribution that does not have a built-in function to generate samples. 
+\par\vspace{0.3 cm}\noindent
+The density function of the exponential is:
+\[
+f_Y(y) = \frac{1}{\beta}e^{-\frac{y}{\beta}}\quad 0\leq y < \infty
+\vspace{0.3 cm}
+\]
+\par\vspace{0.3 cm}\noindent
+The cumulative distribution function (cdf) is:
+\[
+F(y) = \int_0^yf_Y(t)\;dt = 1-e^{-\frac{y}{\beta}}
+\vspace{0.3 cm}
+\]
+and its inverse is:
+\[
+y = F^{-1}(u) = -\beta\ln(1-u)
+\]
+\par\vspace{0.3 cm}\noindent
+The expected value and variance of $y$ are $\beta$ and $\beta^2$, respectively.
+
+
+
+
+<<>>=
+#function to compute the inverse of the CDF
+invcdf<-function(u){
+  
+  z <- -beta*log(1-u)
+  
+  return(z)
+}
+
+beta<-2
+
+y<-runif(100000,0,1)
+u<-invcdf(y)
+hist(u)
+
+mean(u)
+var(u)
+@
+
+
+\end{document}
