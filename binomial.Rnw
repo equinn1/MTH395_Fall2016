@@ -1,0 +1,34 @@
+\documentclass{article}
+
+\begin{document}
+
+<<>>=
+df<-read.csv("binomial_exercise.csv")
+str(df)
+N<-nrow(df)
+y<-df$y
+trials<-df$trials
+@
+
+<<>>=
+library("rstan");
+rstan_options(auto_write = TRUE)
+options(mc.cores = parallel::detectCores())
+
+stanfit <- stan("binomial.stan")
+print(stanfit);
+print(get_stanmodel(stanfit))
+@
+
+<<>>=
+library("shinystan")
+#launch_shinystan(stanfit)
+@
+
+<<>>=
+pd<-extract(stanfit)
+str(pd)
+mean(pd$p)
+quantile(pd$p,c(.025,.25,.5,.75,.975))
+@
+\end{document}
