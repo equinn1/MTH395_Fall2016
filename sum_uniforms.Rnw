@@ -1,0 +1,50 @@
+\documentclass{article}
+
+\begin{document}
+
+Standard prologue
+<<>>=
+set.seed(7334567)
+library(rstan)
+library(shinystan)
+library(reshape2)
+rstan_options(auto_write = TRUE)
+options(mc.cores = parallel::detectCores())
+@
+
+Generate a uniform vector
+<<>>=
+N<-100
+y<-runif(N)
+
+@
+
+Fit STAN
+<<>>=
+stanfit<-stan("sum_uniforms.stan",algorithm="Fixed_param")
+print(stanfit)
+print(get_stanmodel(stanfit))
+pd<-extract(stanfit)
+str(pd)
+@
+
+Graph the resulting distribution
+<<>>=
+ys1<-melt(pd$z1,value.name="z1")
+ggplot(ys1,aes(x=z1))+geom_density()
+
+ys2<-melt(pd$z2,value.name="z2")
+ggplot(ys2,aes(x=z2))+geom_density()
+
+ys3<-melt(pd$z3,value.name="z3")
+ggplot(ys3,aes(x=z3))+geom_density()
+
+ys4<-melt(pd$z4,value.name="z4")
+ggplot(ys4,aes(x=z4))+geom_density()
+
+ys12<-melt(pd$z12,value.name="z12")
+ggplot(ys12,aes(x=z12))+geom_density()
+
+@
+
+\end{document}
